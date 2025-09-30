@@ -1,0 +1,70 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Suivi sur carte — Travely</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <style>
+    .wrap{ max-width:1100px; margin:24px auto 40px; padding:0 12px; }
+    #map{ height: 78vh; border-radius:12px; }
+    .toolbar{ display:flex; gap:10px; margin:10px 0; }
+  </style>
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo"><a href="{{ url_for('home') }}">Travely</a></div>
+    <nav>
+      <ul>
+        <li><a href="{{ url_for('assistant') }}">Assistant</a></li>
+        <li><a href="{{ url_for('preferences') }}">Mes préférences</a></li>
+        <li><a href="{{ url_for('mes_voyages') }}">Mes voyages</a></li>
+        <li><a href="{{ url_for('carte') }}">Suivi sur carte</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="wrap">
+    <h1>Suivi sur carte</h1>
+    <div class="toolbar">
+      <button onclick="refreshMap()" class="actions">Rafraîchir</button>
+      <button onclick="window.location='/assistant'" class="actions">Revenir au chat</button>
+    </div>
+    <div id="map"></div>
+  </section>
+
+  <footer class="footer"><p>&copy; 2025 Travely</p></footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    let map, markersLayer, line;
+    function initMap(){
+      map = L.map('map');
+      const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' });
+      tiles.addTo(map);
+      markersLayer = L.layerGroup().addTo(map);
+      map.setView([48.8566, 2.3522], 5);
+      refreshMap();
+    }
+    async function refreshMap(){
+      try{
+        const r = await fetch('/api/positions');
+        const geo = await r.json();
+        markersLayer.clearLayers();
+        const coords = [];
+        (geo.features || []).forEach(f=>{
+          const [lng, lat] = f.geometry.coordinates;
+          coords.push([lat, lng]);
+          L.marker([lat,lng]).addTo(markersLayer).bindPopup(f.properties?.label || '');
+        });
+        if(line){ line.remove(); }
+        if(coords.length>1){ line = L.polyline(coords, {weight:4}).addTo(markersLayer); }
+        if(coords.length){ map.fitBounds(L.latLngBounds(coords), {padding:[20,20]}); }
+      }catch(e){ console.warn('map refresh failed', e); }
+    }
+    window.addEventListener('load', initMap);
+  </script>
+</body>
+</html>

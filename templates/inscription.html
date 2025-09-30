@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>S'inscrire - Travel Buddy</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo">
+            <a href="{{ url_for('home') }}">Travel Buddy</a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('home') }}">Accueil</a></li>
+                <li><a href="{{ url_for('creer_voyage') }}">Créer mon voyage</a></li>
+                <li><a href="{{ url_for('a_propos') }}">À propos</a></li>
+                <li><a href="{{ url_for('fonctionnement') }}">Fonctionnement</a></li>
+                <li><a href="{{ url_for('contact') }}">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1>S'inscrire</h1>
+        <form id="registerForm">
+            <label for="name">Nom</label>
+            <input type="text" id="name" name="name" placeholder="Votre nom" required>
+
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="Votre email" required>
+
+            <label for="password">Mot de passe</label>
+            <input type="password" id="password" name="password" placeholder="Votre mot de passe" required>
+
+            <label for="confirm_password">Confirmer le mot de passe</label>
+            <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirmer le mot de passe" required>
+
+            <button type="submit">S'inscrire</button>
+        </form>
+
+        <p id="errorMessage" style="color: red; display: none;">Les mots de passe ne correspondent pas !</p>
+        <p id="successMessage" style="color: green; display: none;">Compte créé avec succès !</p>
+
+        <p>Vous avez déjà un compte ? <a href="{{ url_for('se_connecter') }}">Se connecter</a></p>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Travel Buddy. Tous droits réservés.</p>
+    </footer>
+
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm_password').value;
+
+            if (password !== confirmPassword) {
+                document.getElementById('errorMessage').style.display = 'block';
+            } else {
+                const user = { name, email, password };
+                localStorage.setItem('user', JSON.stringify(user));
+                document.getElementById('successMessage').style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+

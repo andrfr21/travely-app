@@ -1,0 +1,141 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Travely</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+      /* Ajouts légers (sans changer l'esthétique globale) */
+      html { scroll-behavior: smooth; }
+      .hero .cta-row{ display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+      .pill{ display:inline-flex; align-items:center; gap:8px; padding:10px 14px; border-radius:999px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); color:#fff; font-size:.95rem; }
+      .pill b{ color:#12E882; }
+      .preview-chat{ max-width:900px; margin:40px auto; display:grid; grid-template-columns: 1.1fr .9fr; gap:18px; }
+      .preview-card{ background:#fff; border-radius:12px; box-shadow:0 8px 16px rgba(0,0,0,.1); padding:18px; }
+      .preview-card h3{ color:#02174C; margin-bottom:6px; }
+      .bubble{ margin:10px 0; padding:10px 12px; border-radius:12px; display:inline-block; max-width:85%; line-height:1.5; }
+      .me{ background:#12E882; color:#02174C; border-top-right-radius:4px; }
+      .ai{ background:#02174C; color:#fff; border-top-left-radius:4px; }
+      .fade-in{ opacity:0; transform: translateY(10px); transition: opacity .6s ease, transform .6s ease; }
+      .fade-in.is-visible{ opacity:1; transform:none; }
+      .sticky-note{ background:#02174C; color:#fff; border:1px dashed rgba(255,255,255,.35); padding:12px; border-radius:10px; }
+      .hero-content .secondary{ background:none; border:1px solid #12E882; color:#12E882; }
+      .hero-content .secondary:hover{ background:#12E882; color:#02174C; }
+      .arrow{ display:block; margin:18px auto 0; font-size:1.4rem; color:#12E882; opacity:.9; }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo">
+            <a href="{{ url_for('home') }}">Travely</a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('assistant') }}">Assistant</a></li>
+                <li><a href="{{ url_for('preferences') }}">Mes préférences</a></li>
+                <li><a href="{{ url_for('mes_voyages') }}">Mes voyages</a></li>
+                <li><a href="{{ url_for('carte') }}">Suivi sur carte</a></li>
+                <li><a href="{{ url_for('contact') }}">Contact</a></li>
+            </ul>
+        </nav>
+        <div class="actions">
+            <a href="{{ url_for('se_connecter') }}"><button>Se connecter</button></a>
+            <a href="{{ url_for('inscription') }}"><button>S'inscrire</button></a>
+            <button onclick="document.getElementById('how').scrollIntoView({behavior:'smooth'})">Fonctionnement</button>
+        </div>
+    </header>
+
+    <!-- Hero centrée sur l'assistant -->
+    <section class="hero bg-starry">
+        <div class="hero-content">
+            <h1>Ton copilote IA de voyage</h1>
+            <p>Planifie, réserve et optimise chaque étape avant, pendant et après le départ.</p>
+            <div class="cta-row">
+              <button onclick="window.location='/assistant'">Discuter avec l'IA</button>
+              <button class="secondary" onclick="window.location='/creer_voyage'">Créer mon voyage</button>
+            </div>
+            <div class="pill" style="margin-top:16px;">
+              <span>⚙️ <b>Personnalisation</b></span> • <span>🗺️ <b>Carte interactive</b></span> • <span>💾 <b>Voyages enregistrés</b></span>
+            </div>
+            <a class="arrow" href="#apercu">▼</a>
+        </div>
+    </section>
+
+    <!-- Aperçu rapide assistant + map (démo statique pour la home) -->
+    <section id="apercu" class="selection-form-section fade-in">
+        <h2>Aperçu en 10 secondes</h2>
+        <p>Essayez l’assistant, puis poursuivez en temps réel dans l’app.</p>
+        <div class="preview-chat">
+          <div class="preview-card">
+            <h3>Assistant Travely</h3>
+            <div class="bubble ai">Salut ! Dis-moi ta prochaine destination ✈️</div>
+            <div class="bubble me">7 jours à Tokyo en novembre, budget 1500€.</div>
+            <div class="bubble ai">Parfait. Je te propose un mix <b>culture</b> + <b>street-food</b>. Vols à surveiller ✈️, hébergements à Shinjuku 🏨, Suivi sur carte prêt 🗺️.</div>
+            <div style="margin-top:10px">
+              <a href="/assistant"><button>Continuer la conversation</button></a>
+            </div>
+          </div>
+          <div class="preview-card">
+            <h3>Suivi sur carte</h3>
+            <p class="sticky-note">Une carte interactive affiche tes étapes, que tu peux ajuster en direct pendant le chat.</p>
+            <img alt="aperçu carte" src="https://picsum.photos/seed/carte/800/520" style="width:100%; border-radius:10px; opacity:.95;">
+          </div>
+        </div>
+    </section>
+
+    <!-- Suggestions existantes conservées -->
+    <section id="how" class="suggestions-section fade-in">
+        <h2>Des idées pour vos prochaines escapades</h2>
+        <div class="tabs">
+            <button class="tab active">Populaire</button>
+            <button class="tab">Sur la côte</button>
+            <button class="tab">Sports d'hiver</button>
+            <button class="tab">Montagnes</button>
+            <button class="tab">Catégories</button>
+            <button class="tab">Activités</button>
+        </div>
+        <div class="destinations-grid" id="suggestionsGrid"></div>
+        <div id="sentinel" style="height:1px;"></div>
+        <button class="show-more" onclick="document.querySelector('.footer').scrollIntoView({behavior:'smooth'})">Afficher plus ▼</button>
+    </section>
+
+    <footer class="footer">
+        <p>&copy; 2025 Travely</p>
+    </footer>
+
+    <script src="/static/script.js"></script>
+    <script>
+      // Animation à l'apparition
+      const io = new IntersectionObserver((es)=>es.forEach(e=>e.isIntersecting&&e.target.classList.add('is-visible')), {threshold:.12});
+      document.querySelectorAll('.fade-in').forEach(el=>io.observe(el));
+      // Déclenche un premier chargement des suggestions
+      (function(){
+        const grid = document.getElementById('suggestionsGrid');
+        const sentinel = document.getElementById('sentinel');
+        if(!grid || !sentinel) return;
+        let page = 1, loading=false, done=false;
+        async function loadMore(){
+          if(loading || done) return; loading = true;
+          try{
+            const r = await fetch(`/api/suggestions?page=${page}`);
+            const data = await r.json();
+            (data.items || []).forEach(it=>{
+              const div = document.createElement('div');
+              div.className = 'destination-item';
+              div.innerHTML = `<h3>${it.title}</h3><p>${it.subtitle}</p>`;
+              grid.appendChild(div);
+            });
+            if(data.next){ page = data.next; } else { done = true; }
+          }catch(e){ console.error('suggestions error', e); }
+          finally{ loading = false; }
+        }
+        const ob = new IntersectionObserver((entries)=>entries.forEach(e=>e.isIntersecting&&loadMore()), {rootMargin:'400px'});
+        ob.observe(sentinel);
+        loadMore();
+      })();
+    </script>
+</body>
+</html>

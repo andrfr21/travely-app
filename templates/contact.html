@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Contact - Travel Buddy</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo">
+            <a href="{{ url_for('home') }}">Travel Buddy</a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('home') }}">Accueil</a></li>
+                <li><a href="{{ url_for('creer_voyage') }}">Créer mon voyage</a></li>
+                <li><a href="{{ url_for('a_propos') }}">À propos</a></li>
+                <li><a href="{{ url_for('fonctionnement') }}">Fonctionnement</a></li>
+                <li><a href="{{ url_for('contact') }}">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1>Contactez-nous</h1>
+        <form id="contactForm">
+            <label for="contact_name">Nom</label>
+            <input type="text" id="contact_name" name="name" placeholder="Votre nom" required>
+
+            <label for="contact_email">Email</label>
+            <input type="email" id="contact_email" name="email" placeholder="Votre email" required>
+
+            <label for="contact_message">Message</label>
+            <textarea id="contact_message" name="message" rows="5" placeholder="Votre message" required></textarea>
+
+            <button type="submit">Envoyer</button>
+        </form>
+
+        <p id="contactSuccessMessage" style="color: green; display: none;">Message envoyé avec succès !</p>
+        <p id="contactErrorMessage" style="color: red; display: none;">Une erreur s'est produite, veuillez réessayer.</p>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Travel Buddy. Tous droits réservés.</p>
+    </footer>
+
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('contact_name').value;
+            const email = document.getElementById('contact_email').value;
+            const message = document.getElementById('contact_message').value;
+
+            // Simulate sending message
+            if (name && email && message) {
+                document.getElementById('contactSuccessMessage').style.display = 'block';
+                document.getElementById('contactErrorMessage').style.display = 'none';
+            } else {
+                document.getElementById('contactErrorMessage').style.display = 'block';
+                document.getElementById('contactSuccessMessage').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+

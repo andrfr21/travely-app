@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Voyage confirmé - Travel Buddy</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="{{ url_for('home') }}">Travel Buddy</a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('home') }}">Accueil</a></li>
+                <li><a href="{{ url_for('creer_voyage') }}">Créer mon voyage</a></li>
+                <li><a href="{{ url_for('a_propos') }}">À propos</a></li>
+                <li><a href="{{ url_for('fonctionnement') }}">Fonctionnement</a></li>
+                <li><a href="{{ url_for('contact') }}">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="confirmation">
+        <h1>Votre voyage a été créé avec succès !</h1>
+        <p>Merci d'avoir choisi Travel Buddy pour organiser votre voyage.</p>
+        
+        <h2>Résumé de votre voyage :</h2>
+        <ul>
+            <li><strong>Destination :</strong> <span id="destination"></span></li>
+            <li><strong>Date de départ :</strong> <span id="start_date"></span></li>
+            <li><strong>Date de retour :</strong> <span id="end_date"></span></li>
+            <li><strong>Type de voyage :</strong> <span id="type"></span></li>
+            <li><strong>Budget :</strong> <span id="budget"></span> €</li>
+            <li><strong>Transport :</strong> <span id="transport"></span></li>
+            <li><strong>Voyage éco-responsable :</strong> <span id="eco"></span></li>
+        </ul>
+
+        <h3>Actions supplémentaires :</h3>
+        <ul>
+            <li><a href="#">Modifier ce voyage</a></li>
+            <li><a href="#">Rechercher des activités</a></li>
+            <li><a href="#">Réserver un logement</a></li>
+            <li><a href="{{ url_for('home') }}">Retour à l'accueil</a></li>
+        </ul>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Travel Buddy. Tous droits réservés.</p>
+    </footer>
+
+    <script>
+        // Récupérer les données du voyage depuis le localStorage
+        const voyageData = JSON.parse(localStorage.getItem('voyageData'));
+
+        // Vérifier que les données existent avant de les afficher
+        if (voyageData) {
+            document.getElementById('destination').textContent = voyageData.destination;
+            document.getElementById('start_date').textContent = voyageData.start_date;
+            document.getElementById('end_date').textContent = voyageData.end_date;
+            document.getElementById('type').textContent = voyageData.type;
+            document.getElementById('budget').textContent = voyageData.budget;
+            document.getElementById('transport').textContent = voyageData.transport;
+            document.getElementById('eco').textContent = voyageData.eco;
+        } else {
+            document.querySelector('.confirmation').innerHTML = '<p>Aucune information de voyage disponible.</p>';
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+

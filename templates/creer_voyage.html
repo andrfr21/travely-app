@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Créer mon voyage - Travel Buddy</title>
+    <link rel="stylesheet" href="/static/style.css">
+
+    <!-- Include flatpickr -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <style>
+        /* Style for loading spinner */
+        #loading {
+            display: none; /* Hidden by default */
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="navbar">
+        <div class="logo">
+            <a href="{{ url_for('home') }}">Travel Buddy</a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('home') }}">Accueil</a></li>
+                <li><a href="{{ url_for('creer_voyage') }}">Créer mon voyage</a></li>
+                <li><a href="{{ url_for('a_propos') }}">À propos</a></li>
+                <li><a href="{{ url_for('fonctionnement') }}">Fonctionnement</a></li>
+                <li><a href="{{ url_for('contact') }}">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Travel Creation Form Section -->
+    <section class="create-travel-section">
+        <h1>Créez votre voyage personnalisé</h1>
+        <p>Remplissez les informations de base pour commencer.</p>
+        
+        <form class="travel-form" id="voyageForm">
+            <h2>Détails essentiels</h2>
+            <label for="destination">Destination</label>
+            <input type="text" id="destination" name="destination" placeholder="Entrez votre destination" required>
+            
+            <label for="start_date">Date d'arrivée</label>
+            <input type="text" id="start_date" name="start_date" required placeholder="Sélectionnez la date d'arrivée" class="datepicker">
+
+            <label for="end_date">Date de départ</label>
+            <input type="text" id="end_date" name="end_date" required placeholder="Sélectionnez la date de départ" class="datepicker">
+            
+            <label for="type">Type de voyage</label>
+            <select id="type" name="type" required>
+                <option value="adventure">Aventure</option>
+                <option value="relaxation">Détente</option>
+                <option value="cultural">Culturel</option>
+                <option value="gastronomy">Gastronomique</option>
+                <option value="shopping">Shopping</option>
+            </select>
+
+            <label for="budget">Budget</label>
+            <input type="number" id="budget" name="budget" placeholder="Budget en €" required>
+
+            <button type="button" id="show-more-toggle">Plus de critères</button>
+
+            <div class="additional-options" id="additionalOptions" style="display: none;">
+                <h2>Préférences avancées</h2>
+                <label for="accommodation_type">Type d'hébergement</label>
+                <select id="accommodation_type" name="accommodation_type">
+                    <option value="hotel">Hôtel</option>
+                    <option value="hostel">Auberge</option>
+                    <option value="bnb">Bed & Breakfast</option>
+                    <option value="camping">Camping</option>
+                    <option value="apartment">Appartement</option>
+                </select>
+                <label>
+                    <input type="checkbox" name="breakfast"> Petit-déjeuner inclus
+                </label>
+                <label>
+                    <input type="checkbox" name="pet_friendly"> Animaux acceptés
+                </label>
+                <label for="activities">Intérêts</label>
+                <select id="activities" name="activities" multiple>
+                    <option value="museums">Musées</option>
+                    <option value="outdoors">Activités extérieures</option>
+                    <option value="nightlife">Vie nocturne</option>
+                    <option value="sports">Sports</option>
+                    <option value="historical">Sites historiques</option>
+                </select>
+                <label for="diet">Régime alimentaire</label>
+                <select id="diet" name="diet">
+                    <option value="none">Aucune</option>
+                    <option value="vegetarian">Végétarien</option>
+                    <option value="vegan">Végan</option>
+                    <option value="gluten_free">Sans gluten</option>
+                    <option value="kosher">Casher</option>
+                    <option value="halal">Halal</option>
+                </select>
+                <label>
+                    <input type="checkbox" name="accessibility"> Besoins d'accessibilité
+                </label>
+                <label>
+                    <input type="checkbox" name="transport" checked> Transport nécessaire
+                </label>
+                <label>
+                    <input type="checkbox" name="eco"> Voyage éco-responsable
+                </label>
+            </div>
+
+            <button type="submit">Lancer mon voyage</button>
+        </form>
+
+        <p id="confirmationMessage" style="display:none;">Votre voyage est en cours de création...</p>
+        
+        <!-- Loading Indicator -->
+        <div id="loading">Chargement des résultats, veuillez patienter...</div>
+        
+        <div id="results" style="margin-top: 20px;"></div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2024 Travel Buddy. Tous droits réservés.</p>
+    </footer>
+
+    <script>
+        // Initialize flatpickr for arrival and departure dates
+        flatpickr("#start_date", {
+            dateFormat: "Y-m-d",
+            minDate: "today", // Prevent selection of past dates
+            onChange: function(selectedDates) {
+                // Update the end date minDate to be the same as the start date
+                document.getElementById('end_date')._flatpickr.set('minDate', selectedDates[0]);
+            }
+        });
+
+        flatpickr("#end_date", {
+            dateFormat: "Y-m-d",
+            minDate: "today", // Prevent selection of past dates
+            onChange: function(selectedDates) {
+                const startDate = document.getElementById('start_date')._flatpickr.selectedDates[0];
+                const endDate = selectedDates[0];
+
+                // If end date is earlier than start date, set end date to start date
+                if (startDate && endDate < startDate) {
+                    document.getElementById('end_date')._flatpickr.setDate(startDate);
+                }
+            }
+        });
+
+        document.getElementById('voyageForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Prevent the default form submission
+            
+            // Capture input values
+            const destination = document.getElementById('destination').value;
+            const startDate = document.getElementById('start_date').value;
+            const endDate = document.getElementById('end_date').value;
+            const type = document.getElementById('type').value;
+            const budget = document.getElementById('budget').value;
+
+            // Show loading indicator
+            document.getElementById('loading').style.display = 'block';
+
+            // Prepare the request to the backend
+            fetch('/search', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    destination: destination,
+                    start_date: startDate,
+                    end_date: endDate,
+                    type_of_trip: type,
+                    budget: budget
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Handle the results
+                displayResults(data.accommodations, data.activities);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            })
+            .finally(() => {
+                // Hide loading indicator
+                document.getElementById('loading').style.display = 'none';
+            });
+        });
+
+        // Function to display results
+        function displayResults(accommodationResults, activityResults) {
+            const resultsContainer = document.getElementById('results');
+            resultsContainer.innerHTML = ''; // Clear previous results
+
+            // Display accommodations
+            if (accommodationResults.length > 0) {
+                accommodationResults.forEach(option => {
+                    const div = document.createElement('div');
+                    div.textContent = `Accommodation: ${option.name || option.title} - Price: €${option.price}`;
+                    resultsContainer.appendChild(div);
+                });
+            } else {
+                resultsContainer.innerHTML += '<div>No accommodation options available.</div>';
+            }
+
+            // Display activities
+            if (activityResults.length > 0) {
+                activityResults.forEach(option => {
+                    const div = document.createElement('div');
+                    div.textContent = `Activity: ${option.name || option.title} - Rating: ${option.rating}`;
+                    resultsContainer.appendChild(div);
+                });
+            } else {
+                resultsContainer.innerHTML += '<div>No activity options available.</div>';
+            }
+        }
+    </script>
+    <script>
+    // ...après displayResults(...)
+    function saveTripToList(payload){
+    const KEY='travely_trips';
+    const list = JSON.parse(localStorage.getItem(KEY) || '[]');
+    list.push({...payload, savedAt:new Date().toISOString()});
+    localStorage.setItem(KEY, JSON.stringify(list));
+    }
+    document.getElementById('voyageForm').addEventListener('submit', function(){
+    const payload = {
+        destination: document.getElementById('destination').value,
+        start_date: document.getElementById('start_date').value,
+        end_date: document.getElementById('end_date').value,
+        type: document.getElementById('type').value,
+        budget: document.getElementById('budget').value
+    };
+    saveTripToList(payload);
+    });
+    </script>
+
+</body>
+</html>
+
+
+
+
+

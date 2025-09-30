@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Fonctionnement - Travel Buddy</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="navbar">
+        <div class="logo">
+            <a href="{{ url_for('home') }}">Travel Buddy</a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('home') }}">Accueil</a></li>
+                <li><a href="{{ url_for('creer_voyage') }}">Créer mon voyage</a></li>
+                <li><a href="{{ url_for('a_propos') }}">À propos</a></li>
+                <li><a href="{{ url_for('fonctionnement') }}">Fonctionnement</a></li>
+                <li><a href="{{ url_for('contact') }}">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Fonctionnement Page with Background -->
+    <section class="fonctionnement">
+        <div class="overlay">
+            <h1>Comment fonctionne Travel Buddy ?</h1>
+            <p>Découvrez comment Travel Buddy vous aide à planifier votre voyage de A à Z, en simplifiant chaque étape.</p>
+        
+            <!-- Steps Section -->
+            <div class="steps">
+                <div class="step">
+                    <div class="step-icon">1</div>
+                    <h2>Étape 1 : Inscription et Connexion</h2>
+                    <p>Créez un compte ou connectez-vous pour accéder à toutes les fonctionnalités. Un compte personnel vous permet de sauvegarder vos préférences et d'accéder à votre historique de voyages.</p>
+                </div>
+
+                <div class="step">
+                    <div class="step-icon">2</div>
+                    <h2>Étape 2 : Personnalisation du Voyage</h2>
+                    <p>Entrez vos critères de voyage : destination, dates, budget, préférences d'activités et d'hébergement. Travel Buddy utilise ces informations pour concevoir un itinéraire sur mesure.</p>
+                </div>
+
+                <div class="step">
+                    <div class="step-icon">3</div>
+                    <h2>Étape 3 : Suggestions et Réservations</h2>
+                    <p>Explorez les meilleures options d’hébergement, de transport, et d’activités locales, toutes vérifiées et adaptées à vos dates. Réservez facilement directement depuis notre interface.</p>
+                </div>
+
+                <div class="step">
+                    <div class="step-icon">4</div>
+                    <h2>Étape 4 : Suivi du Voyage</h2>
+                    <p>Accédez à un suivi en temps réel de votre budget et de votre itinéraire. Recevez des rappels, des conseils pratiques et des informations locales pour une expérience de voyage sereine.</p>
+                </div>
+
+                <div class="step">
+                    <div class="step-icon">5</div>
+                    <h2>Étape 5 : Assistance et Conseils</h2>
+                    <p>Profitez de notre support dédié et de suggestions personnalisées tout au long de votre voyage, comme si un guide était à vos côtés pour répondre à toutes vos questions.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2024 Travel Buddy. Tous droits réservés.</p>
+    </footer>
+</body>
+</html>
+
+
+
+
+

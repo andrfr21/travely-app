@@ -1,0 +1,71 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mes préférences — Travely</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <style>
+    .wrap{ max-width:680px; margin:60px auto; }
+    .note{ background:#02174C; color:#fff; border-radius:12px; padding:14px; margin-bottom:16px; }
+  </style>
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo"><a href="{{ url_for('home') }}">Travely</a></div>
+    <nav>
+      <ul>
+        <li><a href="{{ url_for('assistant') }}">Assistant</a></li>
+        <li><a href="{{ url_for('preferences') }}">Mes préférences</a></li>
+        <li><a href="{{ url_for('mes_voyages') }}">Mes voyages</a></li>
+        <li><a href="{{ url_for('carte') }}">Suivi sur carte</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="wrap">
+    <h1>Mes préférences</h1>
+    <div class="note">Ces préférences personnalisent l’assistant et vos itinéraires.</div>
+    <form id="prefsForm">
+      <label for="pref_name">Prénom</label>
+      <input type="text" id="pref_name" placeholder="Ex: François">
+      <label for="pref_home">Aéroport / Ville de départ</label>
+      <input type="text" id="pref_home" placeholder="Ex: Paris (CDG)">
+      <label for="pref_style">Style de voyage favori</label>
+      <select id="pref_style">
+        <option value="">—</option>
+        <option>Culture</option>
+        <option>Gastronomie</option>
+        <option>Nature</option>
+        <option>Plage</option>
+        <option>Festif</option>
+      </select>
+      <label for="pref_budget">Budget typique (€/jour)</label>
+      <input type="number" id="pref_budget" min="0" step="10" placeholder="Ex: 120">
+      <button type="submit">Enregistrer</button>
+    </form>
+  </section>
+
+  <footer class="footer"><p>&copy; 2025 Travely</p></footer>
+  <script>
+    function getPrefs(){ return JSON.parse(localStorage.getItem('travely_prefs') || '{}'); }
+    function setPrefs(p){ localStorage.setItem('travely_prefs', JSON.stringify(p||{})); }
+    const f = document.getElementById('prefsForm');
+    function fill(){
+      const p = getPrefs();
+      f.pref_name.value = p.name || '';
+      f.pref_home.value = p.home || '';
+      f.pref_style.value = p.style || '';
+      f.pref_budget.value = p.budget || '';
+    }
+    f.addEventListener('submit', (e)=>{
+      e.preventDefault();
+      setPrefs({ name:f.pref_name.value.trim(), home:f.pref_home.value.trim(), style:f.pref_style.value, budget:f.pref_budget.value });
+      alert('Préférences sauvegardées ✅');
+      window.location = '/assistant';
+    });
+    fill();
+  </script>
+</body>
+</html>

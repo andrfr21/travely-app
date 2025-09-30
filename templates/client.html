@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Espace Client - Travel Buddy</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="{{ url_for('home') }}">Travel Buddy</a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('home') }}">Accueil</a></li>
+                <li><a href="{{ url_for('creer_voyage') }}">Créer mon voyage</a></li>
+                <li><a href="{{ url_for('a_propos') }}">À propos</a></li>
+                <li><a href="{{ url_for('fonctionnement') }}">Fonctionnement</a></li>
+                <li><a href="{{ url_for('contact') }}">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1>Bienvenue sur votre espace client, <span id="clientName"></span> !</h1>
+        <p>Ici, vous pouvez gérer vos voyages, consulter vos informations et plus encore.</p>
+
+        <ul>
+            <li><a href="#">Voir mes voyages</a></li>
+            <li><a href="#">Mettre à jour mes informations</a></li>
+            <li><a href="{{ url_for('home') }}">Déconnexion</a></li>
+        </ul>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Travel Buddy. Tous droits réservés.</p>
+    </footer>
+
+    <script>
+        // Afficher le nom du client dans l'espace client
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user) {
+            document.getElementById('clientName').textContent = user.name;
+        } else {
+            document.getElementById('clientName').textContent = 'Client';
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+

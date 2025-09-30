@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mes voyages - Travely</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <style>
+    .trip-card{display:flex;gap:16px;background:#fff;border-radius:12px;box-shadow:0 8px 16px rgba(0,0,0,.06);padding:12px;margin:12px 0;}
+    .trip-card img{width:140px;height:100px;object-fit:cover;border-radius:8px;}
+    .trip-info h3{margin:0 0 6px 0;}
+  </style>
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo"><a href="{{ url_for('home') }}">Travely</a></div>
+    <nav>
+      <ul>
+        <li><a href="{{ url_for('assistant') }}">Assistant</a></li>
+        <li><a href="{{ url_for('preferences') }}">Mes préférences</a></li>
+        <li><a href="{{ url_for('mes_voyages') }}">Mes voyages</a></li>
+        <li><a href="{{ url_for('carte') }}">Suivi sur carte</a></li>
+      </ul>
+    </nav>
+    <div class="actions">
+      <a href="{{ url_for('se_connecter') }}"><button>Se connecter</button></a>
+      <a href="{{ url_for('inscription') }}"><button>S'inscrire</button></a>
+      <button>Changer de langue</button>
+    </div>
+  </header>
+
+  <section class="favorites-section">
+    <h2>Mes voyages sauvegardés</h2>
+    <div id="trips"></div>
+    <button id="export" class="show-more">Exporter JSON</button>
+  </section>
+
+  <footer class="footer"><p>&copy; 2025 Travely</p></footer>
+  <script>
+    const tripsEl = document.getElementById('trips');
+    const KEY = 'travely_trips';
+
+    // Migration : si un ancien "voyageData" unique existe, on l’ajoute à la liste
+    const single = JSON.parse(localStorage.getItem('voyageData') || 'null');
+    const list = JSON.parse(localStorage.getItem(KEY) || '[]');
+    if(single && !list.find(v => v._migrated_from_single)){
+      list.push({...single, _migrated_from_single:true, savedAt: new Date().toISOString()});
+      localStorage.setItem(KEY, JSON.stringify(list));
+    }
+
+    function render(){
+      tripsEl.innerHTML = '';
+      const trips = JSON.parse(localStorage.getItem(KEY) || '[]');
+      if(trips.length === 0){ tripsEl.textContent = "Aucun voyage enregistré."; return; }
+      trips.forEach((t, i) => {
+        const card = document.createElement('div');
+        card.className = 'trip-card';
+        card.innerHTML = `
+          <img src="https://picsum.photos/seed/${i+1}/300/200" alt="${t.destination || ''}" />
+          <div class="trip-info">
+            <h3>${t.destination || 'Destination'}</h3>
+            <p>${t.start_date || '—'} → ${t.end_date || '—'} — ${t.type || '—'} — ${t.budget || '—'}€</p>
+            <div style="margin-top:8px;">
+              <button onclick="go('${(t.destination || '').replace(/'/g,'\\\'')}')" class="show-more">Ouvrir dans l’assistant</button>
+              <button onclick="del(${i})" class="show-more">Supprimer</button>
+            </div>
+          </div>`;
+        tripsEl.appendChild(card);
+      });
+    }
+    function go(dest){ localStorage.setItem('assistant_prefill', dest); window.location = '/assistant'; }
+    function del(idx){
+      const trips = JSON.parse(localStorage.getItem(KEY) || '[]');
+      trips.splice(idx,1);
+      localStorage.setItem(KEY, JSON.stringify(trips));
+      render();
+    }
+    document.getElementById('export').onclick = ()=>{
+      const blob = new Blob([localStorage.getItem(KEY) || '[]'], {type:'application/json'});
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'mes_voyages.json'; a.click();
+    };
+    render();
+  </script>
+</body>
+</html>
