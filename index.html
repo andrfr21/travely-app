@@ -1,0 +1,67 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Voyage Pro AI - Travel Buddy</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">Voyage Pro AI</div>
+        <nav>
+            <ul>
+                <li><a href="#">Accueil</a></li>
+                <li><a href="#">Créer mon voyage</a></li>
+                <li><a href="#">À propos</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+        <div class="actions">
+            <button>Se connecter</button>
+            <button>S'inscrire</button>
+            <button>Changer de langue</button>
+        </div>
+    </header>
+
+    <section class="hero">
+        <h1>Organisez vos vacances de rêve avec Voyage Pro AI</h1>
+        <p>Une expérience de voyage complète et personnalisée grâce à l'IA.</p>
+        <form class="travel-form">
+            <label for="destination">Destination</label>
+            <input type="text" id="destination" name="destination" placeholder="Entrez votre destination">
+            
+            <label for="dates">Dates</label>
+            <input type="text" id="dates" name="dates" placeholder="Sélectionnez vos dates">
+            
+            <label for="type">Type de voyage</label>
+            <select id="type" name="type">
+                <option value="adventure">Aventure</option>
+                <option value="relaxation">Détente</option>
+                <option value="cultural">Culturel</option>
+            </select>
+
+            <label for="budget">Budget</label>
+            <input type="number" id="budget" name="budget" placeholder="Budget en €">
+            
+            <label>
+                <input type="checkbox" name="transport"> Transport nécessaire
+            </label>
+
+            <label>
+                <input type="checkbox" name="eco"> Voyage éco-responsable
+            </label>
+
+            <button type="submit">Lancer mon voyage</button>
+        </form>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Voyage Pro AI. Tous droits réservés.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
