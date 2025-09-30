@@ -19,6 +19,6 @@ This repository contains **Travely (Travel Buddy)**, a prototype of an AI-powere
 3. Create an account and plan your first trip!  
 
 ## 👥 Author
-- François Andréani  
+- François Andreani  
 
 ⚠️ **Note**: This project is a prototype created for demonstration purposes only (not for reuse).
